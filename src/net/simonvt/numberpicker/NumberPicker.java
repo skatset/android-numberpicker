@@ -2020,6 +2020,11 @@ public class NumberPicker extends LinearLayout {
                 if (val > mMaxValue) {
                     return "";
                 } else {
+                    // Writeback FIX by rekire
+                    mValue = Math.max(val, mMinValue);
+                    mValue = Math.min(mValue, mMaxValue);
+                    initializeSelectorWheelIndices();
+                    invalidate();
                     return filtered;
                 }
             } else {
