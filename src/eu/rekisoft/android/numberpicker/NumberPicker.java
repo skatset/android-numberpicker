@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package net.simonvt.numberpicker;
+package eu.rekisoft.android.numberpicker;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -61,8 +62,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-//import android.annotation.Widget;
 
 /**
  * A widget that enables the user to select a number form a predefined range.
@@ -149,6 +148,11 @@ public class NumberPicker extends LinearLayout {
      * Constant for unspecified size.
      */
     private static final int SIZE_UNSPECIFIED = -1;
+
+    /**
+     * The pattern for the text.
+     */
+    private int mFormattingPattern = NO_ID;
 
     /**
      * Use a custom NumberPicker formatting callback to use two-digit minutes
@@ -613,6 +617,12 @@ public class NumberPicker extends LinearLayout {
         mVirtualButtonPressedDrawable = attributesArray.getDrawable(
                 R.styleable.NumberPicker_virtualButtonPressedDrawable);
 
+        //mWrapSelectorWheel = attributesArray.getBoolean(
+        //        R.styleable.NumberPicker_useWrapSelectorWheel, true);
+
+        mFormattingPattern = attributesArray.getResourceId(
+                R.styleable.NumberPicker_formattingPattern, NO_ID);
+
         attributesArray.recycle();
 
         mPressedStateHelper = new PressedStateHelper();
@@ -720,6 +730,35 @@ public class NumberPicker extends LinearLayout {
             if (getImportantForAccessibility() == IMPORTANT_FOR_ACCESSIBILITY_AUTO) {
                 setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
             }
+        }
+
+        generateLabels();
+    }
+
+    public int getFormattingPattern() {
+        return mFormattingPattern;
+    }
+
+    public void setFormattingPattern(int formattingPattern) {
+        this.mFormattingPattern = formattingPattern;
+        generateLabels();
+    }
+
+    private void generateLabels() {
+        if(mFormattingPattern != NO_ID) {
+            String[] labels = new String[mMaxValue - mMinValue + 1];
+            Resources res = getResources();
+            String type = res.getResourceTypeName(mFormattingPattern);
+            for(int i = mMinValue; i <= mMaxValue; i++) {
+                if("string".equals(type)) {
+                    labels[i] = res.getString(mFormattingPattern, i);
+                } else if("plurals".equals(type)) {
+                    labels[i] = res.getQuantityString(mFormattingPattern, i, i);
+                } else {
+                    throw new IllegalArgumentException("Does not support type " + type);
+                }
+            }
+            setDisplayedValues(labels);
         }
     }
 
@@ -1358,6 +1397,7 @@ public class NumberPicker extends LinearLayout {
         }
         boolean wrapSelectorWheel = mMaxValue - mMinValue > mSelectorIndices.length;
         setWrapSelectorWheel(wrapSelectorWheel);
+        generateLabels();
         initializeSelectorWheelIndices();
         updateInputTextView();
         tryComputeMaxWidth();
@@ -1396,6 +1436,7 @@ public class NumberPicker extends LinearLayout {
         }
         boolean wrapSelectorWheel = mMaxValue - mMinValue > mSelectorIndices.length;
         setWrapSelectorWheel(wrapSelectorWheel);
+        generateLabels();
         initializeSelectorWheelIndices();
         updateInputTextView();
         tryComputeMaxWidth();
