@@ -751,9 +751,9 @@ public class NumberPicker extends LinearLayout {
             String type = res.getResourceTypeName(mFormattingPattern);
             for(int i = mMinValue; i <= mMaxValue; i++) {
                 if("string".equals(type)) {
-                    labels[i] = res.getString(mFormattingPattern, i);
+                    labels[i - mMinValue] = res.getString(mFormattingPattern, i);
                 } else if("plurals".equals(type)) {
-                    labels[i] = res.getQuantityString(mFormattingPattern, i, i);
+                    labels[i - mMinValue] = res.getQuantityString(mFormattingPattern, i, i);
                 } else {
                     throw new IllegalArgumentException("Does not support type " + type);
                 }
