@@ -17,7 +17,6 @@
 package net.simonvt.numberpicker;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -619,6 +618,9 @@ public class NumberPicker extends LinearLayout {
         mVirtualButtonPressedDrawable = attributesArray.getDrawable(
                 R.styleable.NumberPicker_virtualButtonPressedDrawable);
 
+        int numberColor = attributesArray.getColor(R.styleable.NumberPicker_textColor, Color.BLACK);
+        int textSelectionColor = attributesArray.getColor(R.styleable.NumberPicker_textSelectorColor, -1);
+
         attributesArray.recycle();
 
         mPressedStateHelper = new PressedStateHelper();
@@ -695,6 +697,8 @@ public class NumberPicker extends LinearLayout {
 
         mInputText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
         mInputText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        mInputText.setTextColor(numberColor);
+        if (textSelectionColor != -1) mInputText.setHighlightColor(textSelectionColor);
 
         // initialize constants
         ViewConfiguration configuration = ViewConfiguration.get(context);
@@ -710,9 +714,7 @@ public class NumberPicker extends LinearLayout {
         paint.setTextAlign(Align.CENTER);
         paint.setTextSize(mTextSize);
         paint.setTypeface(mInputText.getTypeface());
-        ColorStateList colors = mInputText.getTextColors();
-        int color = colors.getColorForState(ENABLED_STATE_SET, Color.WHITE);
-        paint.setColor(color);
+        paint.setColor(numberColor);
         mSelectorWheelPaint = paint;
 
         // create the fling and adjust scrollers
