@@ -1,6 +1,6 @@
-**This library is provided as-is and is not under active development**
+#NumberPicker-Backport
+A backport of the Android 4.4 NumberPicker.
 
-A backport of the Android 4.2 NumberPicker.
-
-
-Requires adding a single attribute to your theme. Check the sample app for how this is done.
+Requires adding a single attribute to your theme. Check the
+[sample app](https://github.com/SimonVT/android-numberpicker/tree/master/samples) for how this is
+done (a better documentation will may follow soon).

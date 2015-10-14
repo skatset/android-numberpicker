@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.simonvt.numberpicker;
+package eu.rekisoft.android.numberpicker;
 
 import android.content.Context;
 import android.hardware.SensorManager;
