@@ -17,6 +17,7 @@
 package eu.rekisoft.android.numberpicker;
 
 import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -1055,6 +1056,7 @@ public class NumberPicker extends LinearLayout {
                             AccessibilityEvent.TYPE_VIEW_HOVER_ENTER);
                     mLastHoveredChildVirtualViewId = hoveredVirtualViewId;
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        //noinspection AndroidLintInlinedApi
                         provider.performAction(hoveredVirtualViewId,
                                 AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                     }
@@ -1069,6 +1071,7 @@ public class NumberPicker extends LinearLayout {
                                 AccessibilityEvent.TYPE_VIEW_HOVER_ENTER);
                         mLastHoveredChildVirtualViewId = hoveredVirtualViewId;
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            //noinspection AndroidLintInlinedApi
                             provider.performAction(hoveredVirtualViewId,
                                     AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null);
                         }
@@ -1617,6 +1620,7 @@ public class NumberPicker extends LinearLayout {
      * @param measureSpec The current measure spec.
      * @return The resolved size and state.
      */
+    @SuppressLint("NewApi")
     private int resolveSizeAndStateRespectingMinSize(
             int minSize, int measuredSize, int measureSpec) {
         if (minSize != SIZE_UNSPECIFIED) {
@@ -1994,8 +1998,8 @@ public class NumberPicker extends LinearLayout {
         } else {
             for (int i = 0; i < mDisplayedValues.length; i++) {
                 // Don't force the user to type in jan when ja will do
-                value = value.toLowerCase();
-                if (mDisplayedValues[i].toLowerCase().startsWith(value)) {
+                value = value.toLowerCase(Locale.getDefault());
+                if (mDisplayedValues[i].toLowerCase(Locale.getDefault()).startsWith(value)) {
                     return mMinValue + i;
                 }
             }
@@ -2101,9 +2105,9 @@ public class NumberPicker extends LinearLayout {
                 }
                 String result = String.valueOf(dest.subSequence(0, dstart)) + filtered
                         + dest.subSequence(dend, dest.length());
-                String str = String.valueOf(result).toLowerCase();
+                String str = String.valueOf(result).toLowerCase(Locale.getDefault());
                 for (String val : mDisplayedValues) {
-                    String valLowerCase = val.toLowerCase();
+                    String valLowerCase = val.toLowerCase(Locale.getDefault());
                     if (valLowerCase.startsWith(str)) {
                         postSetSelectionCommand(result.length(), val.length());
                         return val.subSequence(dstart, val.length());
@@ -2286,6 +2290,7 @@ public class NumberPicker extends LinearLayout {
             }
         }
 
+        @SuppressLint("NewApi")
         public boolean performAction(int virtualViewId, int action, Bundle arguments) {
             if (mProvider != null) {
                 return mProvider.performAction(virtualViewId, action, arguments);
@@ -2349,7 +2354,7 @@ public class NumberPicker extends LinearLayout {
             if (TextUtils.isEmpty(searched)) {
                 return Collections.emptyList();
             }
-            String searchedLowerCase = searched.toLowerCase();
+            String searchedLowerCase = searched.toLowerCase(Locale.getDefault());
             List<AccessibilityNodeInfo> result = new ArrayList<AccessibilityNodeInfo>();
             switch (virtualViewId) {
                 case View.NO_ID: {
@@ -2568,20 +2573,20 @@ public class NumberPicker extends LinearLayout {
                 case VIRTUAL_VIEW_ID_DECREMENT: {
                     String text = getVirtualDecrementButtonText();
                     if (!TextUtils.isEmpty(text)
-                            && text.toLowerCase().contains(searchedLowerCase)) {
+                            && text.toLowerCase(Locale.getDefault()).contains(searchedLowerCase)) {
                         outResult.add(createAccessibilityNodeInfo(VIRTUAL_VIEW_ID_DECREMENT));
                     }
                 } return;
                 case VIRTUAL_VIEW_ID_INPUT: {
                     CharSequence text = mInputText.getText();
                     if (!TextUtils.isEmpty(text) &&
-                            text.toString().toLowerCase().contains(searchedLowerCase)) {
+                            text.toString().toLowerCase(Locale.getDefault()).contains(searchedLowerCase)) {
                         outResult.add(createAccessibilityNodeInfo(VIRTUAL_VIEW_ID_INPUT));
                         return;
                     }
                     CharSequence contentDesc = mInputText.getText();
                     if (!TextUtils.isEmpty(contentDesc) &&
-                            contentDesc.toString().toLowerCase().contains(searchedLowerCase)) {
+                            contentDesc.toString().toLowerCase(Locale.getDefault()).contains(searchedLowerCase)) {
                         outResult.add(createAccessibilityNodeInfo(VIRTUAL_VIEW_ID_INPUT));
                         return;
                     }
@@ -2589,7 +2594,7 @@ public class NumberPicker extends LinearLayout {
                 case VIRTUAL_VIEW_ID_INCREMENT: {
                     String text = getVirtualIncrementButtonText();
                     if (!TextUtils.isEmpty(text)
-                            && text.toLowerCase().contains(searchedLowerCase)) {
+                            && text.toLowerCase(Locale.getDefault()).contains(searchedLowerCase)) {
                         outResult.add(createAccessibilityNodeInfo(VIRTUAL_VIEW_ID_INCREMENT));
                     }
                 }
